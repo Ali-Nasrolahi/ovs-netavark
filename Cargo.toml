@@ -1,0 +1,7 @@
+[package]
+name = "ovs-netavark"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+netavark = "2.1.0"
