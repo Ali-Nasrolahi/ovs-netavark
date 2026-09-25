@@ -1,1 +1,1 @@
-# container-ovs-plugin
+# OVS Netavark Plugin
