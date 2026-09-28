@@ -1,14 +1,28 @@
+PREFIX ?= /usr
+LIBEXECDIR ?= $(PREFIX)/libexec
+
 PLUGIN_NAME	:= ovs-netavark
-RELEASE_BIN	:= $(CURDIR)/target/release/$(PLUGIN_NAME)
-PLUGIN_DIR	:= /usr/local/libexec/netavark
+PLUGIN_DIR ?= $(LIBEXECDIR)/netavark
 PLUGIN_LINK	:= $(PLUGIN_DIR)/$(PLUGIN_NAME)
+
+RELEASE_BIN	:= $(CURDIR)/target/release/$(PLUGIN_NAME)
 
 TEST_BRIDGE		:= ovs-netv-test
 TEST_NETWORK	:= ovs-netv-test
 TEST_CONTAINER	:= ovs-netv-test-container
 
-all:
+all: build
+
+build:
 	cargo build
+
+install:
+	install -d -m 0755 $(NETAVARK_PLUGIN_DIR)
+	install -m 0755 target/release/$(PLUGIN_NAME) $(NETAVARK_PLUGIN_DIR)/$(PLUGIN_NAME)
+
+clean:
+	cargo clean
+	$(MAKE) -f .copr/Makefile clean
 
 test:
 	@echo "==> Building release binary"
@@ -57,10 +71,10 @@ test:
 
 	@echo "==> Test complete"
 
-clean:
+destroy-test:
 	sudo podman rm -f "$(TEST_CONTAINER)"
 	sudo podman network rm -f "$(TEST_NETWORK)"
 	sudo ovs-vsctl --if-exists del-br "$(TEST_BRIDGE)"
 	sudo rm -f "$(PLUGIN_LINK)"
 
-.PHONY: all test clean
+.PHONY: all test destroy-test build install clean

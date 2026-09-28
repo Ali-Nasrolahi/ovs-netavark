@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Check version
+        run: |
+          version="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')"
+          test "$version" = "${GITHUB_REF_NAME}"
+
+      - name: Run tests
+        run: cargo test --locked
+
+      - name: Build release binary
+        run: |
+          cargo build --release --locked
+
+      - name: Prepare release binary
+        run: |
+          mkdir -p dist
+          cp target/release/ovs-netavark dist/ovs-netavark-linux-x86_64
+
+      - name: Vendor dependencies
+        run: |
+          cargo vendor vendor
+
+      - name: Create vendor archive
+        run: |
+          tar -czf dist/vendor.tar.gz vendor
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            dist/ovs-netavark-linux-x86_64
+            dist/vendor.tar.gz

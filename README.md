@@ -32,6 +32,50 @@ plugin.
 The project exists to provide the missing Netavark integration needed to make this model possible
 for Podman containers.
 
+## How to install?
+
+`ovs-netavark` can be installed either from the latest GitHub release or through the COPR repository.
+
+### Binary
+
+Prebuilt x86_64 binaries are available in the [GitHub Releases](https://github.com/Ali-Nasrolahi/ovs-netavark/releases)
+page. Download the binary for the desired release and install it into a Netavark plugin directory:
+
+```bash
+sudo install -Dm755 ovs-netavark-*-linux-x86_64 /usr/local/libexec/netavark/ovs-netavark
+```
+
+### COPR
+
+For Fedora 44/45 and RHEL-family distributions 9/10:
+
+```bash
+sudo dnf copr enable 4zephyr/ovs-netavark
+sudo dnf install ovs-netavark
+```
+
+The COPR package installs the plugin into the system Netavark plugin directory.
+
+### Netavark
+
+`ovs-netavark` is a Netavark plugin and cannot be used with the older CNI networking backend.
+
+Before creating an `ovs-netavark` network, make sure Podman is configured to use **Netavark** rather
+than CNI. On systems where Podman is still configured for CNI, switch the network backend to
+Netavark and restart or recreate any existing networks as appropriate.
+
+You can verify the active backend with:
+
+```bash
+podman info --format '{{.Host.NetworkBackend}}'
+```
+
+It should report:
+
+```text
+netavark
+```
+
 ## Behaviour
 
 When a Podman network using `ovs-netavark` is created, the plugin validates that the configured OVS
