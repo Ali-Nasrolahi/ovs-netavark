@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 permissions:
   contents: write
@@ -21,6 +21,11 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify version
+        run: |
+          test "$(cargo metadata --no-deps --format-version 1 \
+            | jq -r '.packages[0].version')" = "${GITHUB_REF_NAME}"
 
       - name: Install build dependencies
         run: |

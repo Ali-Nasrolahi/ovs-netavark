@@ -3,14 +3,14 @@
 %global netavark_plugin_dir %{_libexecdir}/netavark
 
 Name:           %{crate}
-Version:        0.1.0
+Version:        %(sed -n 's/^[[:space:]]*version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' Cargo.toml | head -n1)
 Release:        1%{?dist}
 Summary:        Open vSwitch plugin for Netavark
 License:        Apache-2.0
 
 URL:            https://github.com/Ali-Nasrolahi/%{crate}
-Source0:        https://github.com/Ali-Nasrolahi/%{crate}/archive/v%{version}/%{crate}-%{version}.tar.gz
-Source1:        https://github.com/Ali-Nasrolahi/%{crate}/releases/download/v%{version}/vendor.tar.gz
+Source0:        %{url}/archive/v%{version}/%{crate}-%{version}.tar.gz
+Source1:        %{url}/releases/download/v%{version}/vendor.tar.gz
 
 BuildRequires:  rust >= 1.70
 BuildRequires:  cargo >= 1.70
@@ -59,6 +59,7 @@ install -m 0755 target/release/%{bin_name} \
 %{netavark_plugin_dir}/%{bin_name}
 
 %changelog
-* Fri Sep 25 2026 Ali Nasrollahi <A.Nasrolahi01@gmail.com>
+* Mon Sep 28 2026 Ali Nasrollahi <A.Nasrolahi01@gmail.com> - 0.1.0-1
 - Initial package
+
 ```
