@@ -18,8 +18,8 @@ BuildRequires:  protobuf-compiler
 BuildRequires:  gcc
 BuildRequires:  make
 
-Requires:       netavark >= 1.6
-Requires:       openvswitch
+Requires:   netavark >= 1.6
+Requires:   /usr/bin/ovs-vsctl
 
 ExclusiveArch:  %{rust_arches}
 
