@@ -9,8 +9,8 @@ Summary:        Open vSwitch plugin for Netavark
 License:        Apache-2.0
 
 URL:            https://github.com/Ali-Nasrolahi/%{crate}
-Source0:        %{url}/archive/v%{version}/%{crate}-%{version}.tar.gz
-Source1:        %{url}/releases/download/v%{version}/vendor.tar.gz
+Source0:        %{url}/archive/%{version}/%{crate}-%{version}.tar.gz
+Source1:        %{url}/releases/download/%{version}/vendor.tar.gz
 
 BuildRequires:  rust >= 1.70
 BuildRequires:  cargo >= 1.70
