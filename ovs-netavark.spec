@@ -3,7 +3,8 @@
 %global netavark_plugin_dir %{_libexecdir}/netavark
 
 Name:           %{crate}
-Version:        %(sed -n 's/^[[:space:]]*version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' Cargo.toml | head -n1)
+#Version:        %(sed -n 's/^[[:space:]]*version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' Cargo.toml | head -n1)
+Version:        0.1.0
 Release:        1%{?dist}
 Summary:        Open vSwitch plugin for Netavark
 License:        Apache-2.0
