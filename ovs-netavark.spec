@@ -3,7 +3,7 @@
 %global netavark_plugin_dir %{_libexecdir}/netavark
 
 Name:           %{crate}
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Open vSwitch plugin for Netavark
 License:        Apache-2.0
@@ -59,6 +59,9 @@ install -m 0755 target/release/%{bin_name} \
 %{netavark_plugin_dir}/%{bin_name}
 
 %changelog
+* Thu Oct 01 2026 Ali Nasrollahi <A.Nasrolahi01@gmail.com> - 0.1.1-1
+- include extra metadata while adding ports to a bridge
+
 * Mon Sep 28 2026 Ali Nasrollahi <A.Nasrolahi01@gmail.com> - 0.1.0-1
 - Initial package
 

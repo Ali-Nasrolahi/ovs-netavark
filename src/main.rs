@@ -9,8 +9,10 @@ use netavark::{
     plugin::{API_VERSION, Info, Plugin, PluginExec},
 };
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
-    let info = Info::new("0.1.0-dev".to_owned(), API_VERSION.to_owned(), None);
+    let info = Info::new(VERSION.to_owned(), API_VERSION.to_owned(), None);
     PluginExec::new(Exec, info).exec();
 }
 
@@ -56,8 +58,19 @@ impl Plugin for Exec {
         let (host_veth, cont_mac) = veth::add_pair(&ns, &peer_veth)
             .map_err(|e| NetavarkError::wrap("failed to setup veth pair", e))?;
 
-        ovs::add_port(&opts.network.name, &host_veth)
-            .map_err(|e| NetavarkError::wrap("failed to add port to OVS bridge", e))?;
+        ovs::add_port(
+            &opts.network.name,
+            &host_veth,
+            HashMap::from([
+                ("netavark.container_id", opts.container_id.as_str()),
+                ("netavark.container_name", opts.container_name.as_str()),
+                ("netavark.network_name", opts.network.name.as_str()),
+                ("netavark.netns", ns.as_str()),
+                ("netavark.peer", peer_veth.as_str()),
+                ("netavark.driver", &format!("ovs-netavark-{VERSION}")),
+            ]),
+        )
+        .map_err(|e| NetavarkError::wrap("failed to add port to OVS bridge", e))?;
 
         Ok(types::StatusBlock {
             dns_search_domains: None,

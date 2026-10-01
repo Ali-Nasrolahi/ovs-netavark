@@ -62,6 +62,7 @@ test:
 	@echo "==> Inspecting OVS bridge"
 	@sudo ovs-vsctl show
 	@sudo ovs-vsctl list-ports $(TEST_BRIDGE)
+	@sudo ovs-vsctl -f json list interface | jq '(.headings | index("external_ids")) as $$dx | .data[][$$dx]'
 
 	@echo "==> Cleaning up"
 	@sudo podman kill "$(TEST_CONTAINER)" >/dev/null 2>&1 || true

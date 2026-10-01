@@ -1,5 +1,5 @@
 use netavark::error::{NetavarkError, NetavarkResult};
-use std::process::Command;
+use std::{collections::HashMap, process::Command};
 
 fn run_ovs(args: &[&str]) -> NetavarkResult<std::process::Output> {
     let out = Command::new("ovs-vsctl")
@@ -17,8 +17,18 @@ fn run_ovs(args: &[&str]) -> NetavarkResult<std::process::Output> {
     Ok(out)
 }
 
-pub fn add_port(br: &str, port: &str) -> NetavarkResult<()> {
-    run_ovs(&["add-port", br, port])?;
+pub fn add_port(br: &str, port: &str, external_ids: HashMap<&str, &str>) -> NetavarkResult<()> {
+    let ext_ids: Vec<String> = external_ids
+        .iter()
+        .map(|(k, v)| format!("external_ids:{}={}", k, v))
+        .collect();
+
+    let mut args: Vec<&str> = vec!["add-port", br, port, "--", "set", "Interface", port];
+    for e in &ext_ids {
+        args.push(e.as_str());
+    }
+
+    run_ovs(&args)?;
     Ok(())
 }
 
