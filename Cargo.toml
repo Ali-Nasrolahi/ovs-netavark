@@ -1,6 +1,6 @@
 [package]
 name = "ovs-netavark"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "Open vSwitch plugin for Netavark"
 authors = ["Ali Nasrollahi A.Nasrolahi01@gmail.com"]
